@@ -19,3 +19,52 @@ func (ctx *DBContext) GetRealGDPPerCapita(startDate string, endDate string) ([]m
 	`
 	return ctx.ExecuteQuery(query, startDate, endDate)
 }
+
+// GetFederalFundsEffectiveRate returns the federal funds effective rate data for the given date range
+func (ctx *DBContext) GetFederalFundsEffectiveRate(startDate string, endDate string) ([]map[string]interface{}, error) {
+	query := `
+		select Date, DFF
+		from main.federal_funds_effective_rate
+		where Date between cast(? as date) and cast(? as date)
+	`
+	return ctx.ExecuteQuery(query, startDate, endDate)
+}
+
+// GetLaborForceParticipationRate returns the labor force participation rate data for the given date range
+func (ctx *DBContext) GetLaborForceParticipationRate(startDate string, endDate string) ([]map[string]interface{}, error) {
+	query := `
+		select Date, CIVPART
+		from main.labor_force_participation_rate
+		where Date between cast(? as date) and cast(? as date)
+	`
+	return ctx.ExecuteQuery(query, startDate, endDate)
+}
+
+// GetUnemploymentRate returns the unemployment rate data for the given date range
+func (ctx *DBContext) GetUnemploymentRate(startDate string, endDate string) ([]map[string]interface{}, error) {
+	query := `
+		select Date, UNRATE
+		from main.unemployment_rate
+		where Date between cast(? as date) and cast(? as date)
+	`
+	return ctx.ExecuteQuery(query, startDate, endDate)
+}
+
+// GetRealMedianPersonalIncome returns the real median personal income data for the given date range
+func (ctx *DBContext) GetRealMedianPersonalIncome(startDate string, endDate string) ([]map[string]interface{}, error) {
+	query := `
+		select Date, MEPAINUSA672N
+		from main.real_median_personal_income
+		where Date between cast(? as date) and cast(? as date)
+	`
+	return ctx.ExecuteQuery(query, startDate, endDate)
+}
+
+func (ctx *DBContext) GetMeanUnemploymentRate(startDate string, endDate string) ([]map[string]interface{}, error) {
+	query := `
+		select AVG(UNRATE)
+		from main.unemployment_rate
+		where Date between cast(? as date) and cast(? as date)
+	`
+	return ctx.ExecuteQuery(query, startDate, endDate)
+}

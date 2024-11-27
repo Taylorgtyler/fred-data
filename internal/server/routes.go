@@ -25,6 +25,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Get("/", s.HelloWorldHandler)
 	r.Get("/api/real-gdp", s.GetRealGDPHandler)
+	r.Get("/api/real-gdp-per-capita", s.GetRealGDPPerCapitaHandler)
+	r.Get("/api/federal-funds-effective-rate", s.GetFederalFundsEffectiveRateHandler)
+	r.Get("/api/labor-force-participation-rate", s.GetLaborForceParticipationRateHandler)
+	r.Get("/api/unemployment-rate", s.GetUnemploymentRateHandler)
+	r.Get("/api/mean-unemployment-rate", s.GetMeanUnemploymentRateHandler)
+	r.Get("/api/real-median-personal-income", s.GetRealMedianPersonalIncomeHandler)
 	return r
 }
 
@@ -77,6 +83,111 @@ func (s *Server) GetRealGDPPerCapitaHandler(w http.ResponseWriter, r *http.Reque
 
 	if transaction == nil {
 		http.Error(w, "No GDP per capita data points found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(transaction)
+}
+
+// GetFederalFundsEffectiveRateHandler is a handler that returns the federal funds effective rate data
+func (s *Server) GetFederalFundsEffectiveRateHandler(w http.ResponseWriter, r *http.Request) {
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+
+	transaction, err := s.db.GetFederalFundsEffectiveRate(startDate, endDate)
+	if err != nil {
+		log.Printf("Failed to fetch federal funds effective rate data: %v", err)
+		http.Error(w, "Failed to fetch federal funds effective rate data", http.StatusInternalServerError)
+		return
+	}
+
+	if transaction == nil {
+		http.Error(w, "No federal funds effective rate data points found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(transaction)
+}
+
+// GetLaborForceParticipationRateHandler is a handler that returns the labor force participation rate data
+func (s *Server) GetLaborForceParticipationRateHandler(w http.ResponseWriter, r *http.Request) {
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+
+	transaction, err := s.db.GetLaborForceParticipationRate(startDate, endDate)
+	if err != nil {
+		log.Printf("Failed to fetch labor force participation rate data: %v", err)
+		http.Error(w, "Failed to fetch labor force participation rate data", http.StatusInternalServerError)
+		return
+	}
+
+	if transaction == nil {
+		http.Error(w, "No labor force participation rate data points found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(transaction)
+}
+
+// GetUnemploymentRateHandler is a handler that returns the unemployment rate data
+func (s *Server) GetUnemploymentRateHandler(w http.ResponseWriter, r *http.Request) {
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+
+	transaction, err := s.db.GetUnemploymentRate(startDate, endDate)
+	if err != nil {
+		log.Printf("Failed to fetch unemployment rate data: %v", err)
+		http.Error(w, "Failed to fetch unemployment rate data", http.StatusInternalServerError)
+		return
+	}
+
+	if transaction == nil {
+		http.Error(w, "No unemployment rate data points found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(transaction)
+}
+
+// GetRealMedianPersonalIncomeHandler is a handler that returns the real median personal income data
+func (s *Server) GetRealMedianPersonalIncomeHandler(w http.ResponseWriter, r *http.Request) {
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+
+	transaction, err := s.db.GetRealMedianPersonalIncome(startDate, endDate)
+	if err != nil {
+		log.Printf("Failed to fetch real median personal income data: %v", err)
+		http.Error(w, "Failed to fetch real median personal income data", http.StatusInternalServerError)
+		return
+	}
+
+	if transaction == nil {
+		http.Error(w, "No real median personal income data points found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(transaction)
+}
+
+// GetMeanUnemploymentRateHandler is a handler that returns the mean unemployment rate data
+func (s *Server) GetMeanUnemploymentRateHandler(w http.ResponseWriter, r *http.Request) {
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+
+	transaction, err := s.db.GetMeanUnemploymentRate(startDate, endDate)
+	if err != nil {
+		log.Printf("Failed to fetch mean unemployment rate data: %v", err)
+		http.Error(w, "Failed to fetch mean unemployment rate data", http.StatusInternalServerError)
+		return
+	}
+
+	if transaction == nil {
+		http.Error(w, "No mean unemployment rate data points found", http.StatusNotFound)
 		return
 	}
 
