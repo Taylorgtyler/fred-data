@@ -15,7 +15,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	// CORS configuration
 	corsOptions := cors.Options{
-		AllowedOrigins:   []string{"fred-dashboard-v1.pages.dev"},
+		AllowedOrigins:   []string{"https://fred-dashboard-v1.pages.dev"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowCredentials: true,
 	}
